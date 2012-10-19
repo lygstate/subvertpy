@@ -17,7 +17,7 @@
 
 from subvertpy.six import iterkeys,itervalues,iteritems
 from subvertpy.six import next
-from subvertpy.six import BytesIO
+from subvertpy.six import BytesIO,b
 
 from subvertpy import (
     NODE_DIR, NODE_NONE, NODE_UNKNOWN,
@@ -167,9 +167,9 @@ class TestRemoteAccess(SubversionTestCase):
             else:
                 (paths, revnum, props, has_children) = returned[1]
             if ra.api_version() < (1, 6):
-                self.assertEquals({'/foo': ('A', None, -1, NODE_UNKNOWN)}, paths)
+                self.assertEquals({'/foo': (b('A'), None, -1, NODE_UNKNOWN)}, paths)
             else:
-                self.assertEquals({'/foo': ('A', None, -1, NODE_DIR)}, paths)
+                self.assertEquals({'/foo': (b('A'), None, -1, NODE_DIR)}, paths)
             self.assertEquals(revnum, 1)
             self.assertEquals(set(["svn:date", "svn:author", "svn:log"]), 
                               set(iterkeys(props)))
@@ -199,7 +199,7 @@ class TestRemoteAccess(SubversionTestCase):
                 (paths, revnum, props) = returned[1]
             else:
                 (paths, revnum, props, has_children) = returned[1]
-            self.assertEquals({'/foo': ('A', None, -1)}, paths)
+            self.assertEquals({'/foo': (b('A'), None, -1)}, paths)
             self.assertEquals(revnum, 1)
             self.assertEquals(set(["svn:date", "svn:author", "svn:log"]), 
                               set(iterkeys(props)))
@@ -332,12 +332,12 @@ class TestRemoteAccess(SubversionTestCase):
         stream = BytesIO()
         self.ra.get_file("bar", stream, 1)
         stream.seek(0)
-        self.assertEquals("a", stream.read())
+        self.assertEquals(b("a"), stream.read())
 
         stream = BytesIO()
         self.ra.get_file("/bar", stream, 1)
         stream.seek(0)
-        self.assertEquals("a", stream.read())
+        self.assertEquals(b("a"), stream.read())
 
     def test_get_locations_root(self):
         self.assertEquals({0: "/"}, self.ra.get_locations("", 0, [0]))

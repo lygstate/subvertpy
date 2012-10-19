@@ -55,7 +55,7 @@ class TestRepository(TestCaseInTempDir):
         r = repos.create(os.path.join(self.test_dir, "foo"))
         f = BytesIO()
         r.verify_fs(f, 0, 0)
-        self.assertEquals('* Verified revision 0.\n', f.getvalue())
+        self.assertEquals(b('* Verified revision 0.\n'), f.getvalue())
 
     def test_open(self):
         repos.create(os.path.join(self.test_dir, "foo"))
@@ -138,8 +138,8 @@ class StreamTests(TestCase):
         if repos.api_version() < (1, 6):
             self.assertRaises(NotImplementedError, s.read)
         else:
-            self.assertEquals("", s.read())
-            self.assertEquals("", s.read(15))
+            self.assertEquals(b(""), s.read())
+            self.assertEquals(b(""), s.read(15))
             s.close()
 
     def test_write(self):

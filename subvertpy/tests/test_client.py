@@ -21,7 +21,7 @@ import shutil
 import tempfile
 
 from subvertpy.six import iterkeys,itervalues,iteritems
-from subvertpy.six import BytesIO
+from subvertpy.six import BytesIO,b
 from subvertpy import (
     SubversionException,
     NODE_DIR, NODE_FILE,
@@ -143,7 +143,7 @@ class TestClient(SubversionTestCase):
         (outf, errf) = self.client.diff(1, 2, self.repos_url, self.repos_url)
         self.addCleanup(outf.close)
         self.addCleanup(errf.close)
-        self.assertEquals("""Index: foo
+        self.assertEquals(b("""Index: foo
 ===================================================================
 --- foo\t(revision 1)
 +++ foo\t(revision 2)
@@ -152,13 +152,13 @@ class TestClient(SubversionTestCase):
 \\ No newline at end of file
 +foo2
 \\ No newline at end of file
-""".splitlines(), outf.read().splitlines())
-        self.assertEquals("", errf.read())
+""").splitlines(), outf.read().splitlines())
+        self.assertEquals(b(""), errf.read())
 
     def assertCatEquals(self, value, revision=None):
         io = BytesIO()
         self.client.cat("dc/foo", io, revision)
-        self.assertEquals(value, io.getvalue())
+        self.assertEquals(b(value), io.getvalue())
 
     def test_cat(self):
         self.build_tree({"dc/foo": "bla"})
