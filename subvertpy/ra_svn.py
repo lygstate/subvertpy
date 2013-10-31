@@ -23,6 +23,7 @@ import os
 import socket
 import subprocess
 import urllib.parse
+from errno import EPIPE
 
 from subvertpy import (
     ERR_RA_SVN_UNKNOWN_CMD,
@@ -1075,7 +1076,7 @@ class TCPSVNRequestHandler(socketserver.StreamRequestHandler):
         try:
             server.serve()
         except socket.error as e:
-            if e.errno == 32:# EPIPE
+            if e.errno == EPIPE:
                 return
             raise
 
